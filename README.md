@@ -100,4 +100,4 @@ This project is configured to use the following models from Hugging Face:
 
 This project is licensed under the MIT License.
 
-Created with ❤️ by **[Youssef Mustafa](https://github.com/yousseifmustafa)** © 2024
+Created with ❤️ by **[Youssef Mustafa](https://github.com/yousseifmustafa)** © 2025
