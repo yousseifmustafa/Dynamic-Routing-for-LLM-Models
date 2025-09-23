@@ -1,3 +1,16 @@
+<div align="center">
+
+![Python](https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python)
+![LangChain](https://img.shields.io/badge/LangChain-⚡️-f59e0b?style=for-the-badge)
+![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Models-yellow?style=for-the-badge)
+![License](https://img.shields.io/github/license/yousseifmustafa/Dynamic-Routing-for-LLM-Models?style=for-the-badge)
+![GitHub Stars](https://img.shields.io/github/stars/yousseifmustafa/Dynamic-Routing-for-LLM-Models?style=social)
+![GitHub Forks](https://img.shields.io/github/forks/yousseifmustafa/Dynamic-Routing-for-LLM-Models?style=social)
+
+</div>
+
+
+
 # 🧠 Dynamic LLM Query Router
 
 This project is a smart Python script that classifies user queries into 'Simple', 'Medium', or 'Advanced' and routes them to the most appropriate Large Language Model (LLM) for the job. It uses LangChain and Hugging Face to create an efficient, scalable, and intelligent query-handling system that optimizes for both cost and performance.
@@ -48,9 +61,10 @@ source venv/bin/activate
 ```
 
 ### 3. Install Dependencies
-Install all the required Python packages from the `requirements.txt` file.
+Install all the required Python packages .
 ```bash
-pip install -r requirements.txt
+pip install langchain-huggingface python-dotenv
+
 ```
 
 ### 4. Set Up Environment Variables
