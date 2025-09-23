@@ -1,17 +1,11 @@
-<div align="center">
-
-![Python](https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python)
-![LangChain](https://img.shields.io/badge/LangChain-⚡️-f59e0b?style=for-the-badge)
-![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Models-yellow?style=for-the-badge)
-![License](https://img.shields.io/github/license/yousseifmustafa/Dynamic-Routing-for-LLM-Models?style=for-the-badge)
-![GitHub Stars](https://img.shields.io/github/stars/yousseifmustafa/Dynamic-Routing-for-LLM-Models?style=social)
-![GitHub Forks](https://img.shields.io/github/forks/yousseifmustafa/Dynamic-Routing-for-LLM-Models?style=social)
-
-</div>
-
-
-
 # 🧠 Dynamic LLM Query Router
+
+![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python)
+![Framework](https://img.shields.io/badge/Framework-LangChain-purple)
+![Provider](https://img.shields.io/badge/Provider-Hugging%20Face-yellow?logo=huggingface)
+![Models](https://img.shields.io/badge/Models-Llama3%20&%20Mixtral-green?logo=meta)
+![Dependencies](https://img.shields.io/badge/Dependencies-pip-orange?logo=pypi)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 This project is a smart Python script that classifies user queries into 'Simple', 'Medium', or 'Advanced' and routes them to the most appropriate Large Language Model (LLM) for the job. It uses LangChain and Hugging Face to create an efficient, scalable, and intelligent query-handling system that optimizes for both cost and performance.
 
