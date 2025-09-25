@@ -98,8 +98,8 @@ This project is configured to use the following models from Hugging Face:
 
 | Role          | Model Name                          | Purpose                               |
 | :------------ | :---------------------------------- | :------------------------------------ |
-| **Router** | `meta-llama/Meta-Llama-3-8B-Instruct` | Fast and efficient query classification. |
-| **Simple Tier** | `meta-llama/Meta-Llama-3-8B-Instruct` | Handling basic, straightforward questions. |
+| **Router** | `meta-llama/Llama-3.2-3B-Instruct` | Fast and efficient query classification. |
+| **Simple Tier** | `meta-llama/Llama-3.2-3B-Instruct` | Handling basic, straightforward questions. |
 | **Medium Tier** | `meta-llama/Meta-Llama-3-8B-Instruct` | General-purpose tasks and explanations. |
 | **Advanced Tier** | `mistralai/Mixtral-8x7B-Instruct-v0.1` | Complex analysis, coding, and reasoning. |
 
@@ -109,8 +109,6 @@ This project is configured to use the following models from Hugging Face:
 ## 📂 Project Structure
 ```
 /
-├── .streamlit/
-│   └── config.toml   # Theming configuration (dark/light mode)
 ├── app.py            # The main Streamlit application UI
 ├── router_logic.py   # Core classification and routing logic
 ├── requirements.txt  # Project dependencies
