@@ -6,24 +6,18 @@ from langchain_huggingface.chat_models import ChatHuggingFace
 
 load_dotenv()
 
-
 if not os.getenv("HF_API_KEY"):
-    raise ValueError("Cant Find Your Hugging Face Token")
+    raise ValueError("Hugging Face API token not found. Please set it in your .env file.")
 else:
     api_key = os.getenv("HF_API_KEY")
 
 
-query_cache = {}
-
-
-
+# Defining LLMs 
 simple_llm = ChatHuggingFace(llm=HuggingFaceEndpoint(
     repo_id="meta-llama/Llama-3.2-3B-Instruct",
     huggingfacehub_api_token=api_key,
-    temperature=0.2,
-    max_new_tokens=100,
-    timeout=60
-))
+    temperature=0.2
+    ))
 
 medium_llm = ChatHuggingFace(llm=HuggingFaceEndpoint(
     repo_id="meta-llama/Meta-Llama-3-8B-Instruct",
@@ -58,28 +52,23 @@ Your response MUST be ONLY ONE WORD from that list. Do not add any explanation o
     - **Example of overriding rules:** The query "Solve a partial differential equation" is very short, but it is extremely 'Advanced'. Your judgment must override the word count rule here.
 
 Return only one word: 'Simple', 'Medium', or 'Advanced'."""),
-
     ("human", "Query: 'Translate 'Good morning' to Arabic'"),
     ("ai", "Simple"),
-    
     ("human", "Query: 'Create a 6-month marketing plan for a new startup'"),
     ("ai", "Advanced"),
-
     ("human", "Query: 'Solve 2x^2 + 3x - 5 = 0'"),
-    ("ai", "Advanced"),
-
+    ("ai", "Medium"),
     ("human", "Query: '{query}'")
 ])
 
-
+# 2. Templates for each expert
 simple_template = ChatPromptTemplate.from_messages([
     ("system", "You are a straightforward, factual assistant. Answer the user's question very concisely and directly in one or two sentences."),
     ("human", "{query}")
 ])
 
-
 medium_template = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful and clear assistant. Fulfill the user's request thoroughly."),
+    ("system", "You are a helpful and clear assistant. Fulfill the user's request thoroughly and provide a well-structured answer."),
     ("human", "{query}")
 ])
 
@@ -88,108 +77,75 @@ advanced_template = ChatPromptTemplate.from_messages([
     ("human", "{query}")
 ])
 
+
+# A chain for each path the query can take
 simple_chain = simple_template | simple_llm
 medium_chain = medium_template | medium_llm
 advanced_chain = advanced_template | advanced_llm
-classification_chain = router_template | simple_llm
+classification_chain = router_template | simple_llm # Use the fastest model for classification
 
 
 def call_model(chain, query: str, model_name: str):
+    """Invokes a given chain and handles potential exceptions, returning the response and logs."""
     try:
         response = chain.invoke({"query": query})
-        return response.content, None  
+        return response.content, None  # (answer, error)
     except Exception as e:
         error_msg = f"Error from {model_name} Model: {e}\n"
-        print(error_msg, end="")
-        return None, error_msg 
-    
+        return None, error_msg # (answer, error)
+
 
 def classify_query(query: str) -> str:
+    """Classifies the query into 'Simple', 'Medium', or 'Advanced'."""
     try:
-        response = classification_chain.invoke({"query": query}) 
+        response = classification_chain.invoke({"query": query})
         result = response.content.strip()
         if result in ["Simple", "Medium", "Advanced"]:
             return result
         else:
+            # Default to Medium if classification is unclear
             return "Medium"
-    except Exception  :
-            return "Medium"
-            
+    except Exception:
+        # Default to Medium on any classification error
+        return "Medium"
 
 
-def route_query(query: str):
+def route_query(query: str, query_cache: dict):
+    """
+    The main function that classifies a query, routes it to the appropriate model,
+    handles fallbacks, and uses a cache.
+    """
     if query in query_cache:
-        return query_cache[query], ""
+        # If the answer is already in the cache, return it immediately
+        return query_cache[query], "Fetched from cache."
 
     classification = classify_query(query)
-    print(f"Query classified as: {classification}")
+    logs = f"Query classified as: {classification}\n"
     
-    answer = None
-    logs = ""
-    
+    # Define the fallback chain based on the classification
     if classification == "Simple":
         models_to_try = [("Simple", simple_chain), ("Medium", medium_chain), ("Advanced", advanced_chain)]
     elif classification == "Medium":
         models_to_try = [("Medium", medium_chain), ("Advanced", advanced_chain), ("Simple", simple_chain)]
-    else: 
+    else:  # Advanced
         models_to_try = [("Advanced", advanced_chain), ("Medium", medium_chain), ("Simple", simple_chain)]
 
-
+    answer = None
+    # Try the models in the defined order
     for name, chain in models_to_try:
+        logs += f"Attempting to use {name} model...\n"
         answer, error = call_model(chain, query, name)
         if error:
             logs += error
         if answer:
+            logs += f"Success with {name} model!\n"
             print(f"Success with {name} model!")
             break 
-        
+    
     if not answer:
-        answer = "Sorry, all models failed to respond."
+        answer = "Sorry, all models failed to generate a response. Please try again later."
+        logs += "All models failed.\n"
 
+    # Save the final answer to the cache before returning
     query_cache[query] = answer
     return answer, logs
-
-
-def write_to_file(filepath: str, content: str):
-    try:
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(content)
-    except Exception as e:
-        print(f"Failed to write to {filepath}: {e}")
-
-
-if __name__ == "__main__":
-    test_queries = [
-        "2+2",
-        "Translate 'Good morning' to Arabic",
-        "Hi , Ai" ,
-        "What is AI?",
-        "Write a short paragraph about sleep benefits",
-        "Write an email requesting a leave",
-        "Explain how a car engine works",
-        "6-month marketing plan for a startup","Write an email requesting a leave",
-        "Fix Java code with NullPointerException",
-        "Summarize a story of The Tell-Tale Heart",
-        "What is the core message in the following 30-word text about responsible AI: 'Developing artificial intelligence requires a deep commitment to fairness, transparency, and accountability to ensure technology serves all of humanity justly?",
-        "Python code to print even numbers 1–10",
-        "Solve 2x² + 3x - 5 = 0"
-    ]
-
-    all_answers_list = []
-    all_logs_list = []
-    i=1 
-    for q in test_queries:
-        print("\n"*3)
-        final_answer, query_logs = route_query(q) 
-        
-        print("\n"*3)
-        print(final_answer)
-        print("\n"*3)
-        
-        all_answers_list.append(f"Q {i}: {q}\n A {i}: {final_answer}\n" + "\n"*3)
-        if query_logs:
-            all_logs_list.append(f"Logs for query '{q}':\n{query_logs}")
-        i+=1
-            
-    write_to_file("Answers.txt", "\n".join(all_answers_list))
-    write_to_file("logs.txt", "\n".join(all_logs_list))
