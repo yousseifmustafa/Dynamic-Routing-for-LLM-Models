@@ -59,7 +59,7 @@ Now, run the installation command:
 ```bash
 pip install -r requirements.txt
 ```
-
+---
 ### 4. Set Up Environment Variables
 Create a file named `.env` in the root directory and add your Hugging Face API token.
 ```
