@@ -1,35 +1,27 @@
 # 🧠 Dynamic LLM Query Router
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python)
-![Framework](https://img.shields.io/badge/Framework-LangChain-purple)
+![Framework](https://img.shields.io/badge/Framework-Streamlit-red?logo=streamlit)
+![LangChain](https://img.shields.io/badge/Orchestration-LangChain-purple)
 ![Provider](https://img.shields.io/badge/Provider-Hugging%20Face-yellow?logo=huggingface)
 ![Models](https://img.shields.io/badge/Models-Llama3%20&%20Mixtral-green?logo=meta)
-![Dependencies](https://img.shields.io/badge/Dependencies-pip-orange?logo=pypi)
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
-This project is a smart Python script that classifies user queries into 'Simple', 'Medium', or 'Advanced' and routes them to the most appropriate Large Language Model (LLM) for the job. It uses LangChain and Hugging Face to create an efficient, scalable, and intelligent query-handling system that optimizes for both cost and performance.
+<br>
+
+This project is an **interactive web application** that intelligently classifies user queries and routes them to the most appropriate Large Language Model (LLM). Built with Streamlit and LangChain, it provides an efficient, scalable, and user-friendly interface to a powerful multi-model backend that optimizes for both cost and performance.
 
 ---
 
-## ✨ Features
 
--   **Dynamic Routing**: Intelligently classifies queries to determine their complexity before sending them to an execution model.
--   **Multi-Model Architecture**: Uses different LLMs for different tasks, optimizing for speed, cost, and analytical power.
--   **Robust Fallback Mechanism**: If a chosen model fails, the system automatically retries the query with the next, more powerful model to ensure the user always gets a response.
--   **Response Caching**: Caches answers to previously seen queries to provide instant results and minimize redundant API calls.
--   **Comprehensive Logging**: Saves all successful answers and any errors encountered to separate text files (`Answers.txt` and `logs.txt`) for easy debugging and review.
+## 🚀 Core Features
 
----
-
-## ⚙️ How It Works
-
-The script follows a simple yet powerful logic:
-
-
-1.  **Classification**: When a query is received, it's first sent to a small, fast "Router" LLM (`meta-llama/Llama-3.2-3B-Instruct`). The router's sole purpose is to analyze the query and return one word: `Simple`, `Medium`, or `Advanced`.
-2.  **Routing**: Based on the classification, the query is dispatched to the corresponding LLM chain.
-3.  **Execution & Fallback**: The designated model processes the query. If it fails, the system automatically tries the next model up in the hierarchy (e.g., a failed 'Simple' query is sent to the 'Medium' model).
-4.  **Caching & Logging**: The final answer is cached for future use and the response is logged to `Answers.txt`. Any errors are logged in `logs.txt`.
+-   **✨ Interactive Web UI**: A beautiful and responsive interface built with Streamlit, featuring a custom dark mode theme, one-click example prompts, and real-time feedback.
+-   **🧠 Dynamic Routing**: Intelligently classifies queries into `Simple`, `Medium`, or `Advanced` to determine their complexity before execution.
+-   **⚙️ Multi-Model Architecture**: Uses different Hugging Face LLMs for different tasks, optimizing for speed, cost, and analytical power.
+-   **🛡️ Robust Fallback Mechanism**: If a chosen model fails, the system automatically retries the query with the next, more powerful model to ensure the user always gets a response.
+-   **⚡ Response Caching**: Caches answers to previously seen queries to provide instant results and minimize redundant API calls.
+-   **🔍 Transparent Logging**: The UI includes an expandable section to view the router's decision-making process and any errors encountered during execution.
 
 ---
 
@@ -55,29 +47,48 @@ source venv/bin/activate
 ```
 
 ### 3. Install Dependencies
-Install all the required Python packages .
+Create a `requirements.txt` file with the content below, then install all packages using pip.
+```txt
+# requirements.txt
+streamlit
+python-dotenv
+langchain-huggingface
+langchain_core
+```
+Now, run the installation command:
 ```bash
-pip install langchain-huggingface python-dotenv
-
+pip install -r requirements.txt
 ```
 
 ### 4. Set Up Environment Variables
-Create a file named `.env` in the root directory of the project and add your Hugging Face API token to it. **This file is ignored by Git and should never be shared.**
+Create a file named `.env` in the root directory and add your Hugging Face API token.
 ```
 HF_API_KEY="your_hugging_face_api_key_here"
 ```
 
----
-
-## 🚀 Usage
-
-To run the script, execute the main Python file from your terminal. Make sure your virtual environment is activated.
-
-```bash
-python your_main_script_name.py
+### 5. (Optional) Configure the Theme
+For the custom dark theme, create a folder named `.streamlit` and inside it, a file named `config.toml`.
+```toml
+# .streamlit/config.toml
+[theme]
+base="dark"
+primaryColor="#6c5ce7"
+backgroundColor="#0e1117"
+secondaryBackgroundColor="#262730"
+textColor="#fafafa"
+font="sans serif"
 ```
 
-The script will process the predefined list of test queries, print the classification and final answers to the console, and generate the `Answers.txt` and `logs.txt` files.
+---
+
+## 🚀 How to Run the App
+
+With your virtual environment activated, run the Streamlit application from your terminal.
+
+```bash
+streamlit run app.py
+```
+Your web browser will automatically open with the application running.
 
 ---
 
@@ -85,14 +96,26 @@ The script will process the predefined list of test queries, print the classific
 
 This project is configured to use the following models from Hugging Face:
 
-| Role           | Model Name                               | Purpose                                     |
-| :------------- | :--------------------------------------- | :------------------------------------------ |
-| **Router** | `meta-llama/Llama-3.2-3B-Instruct`       | Fast and efficient query classification.    |
-| **Simple Tier**| `meta-llama/Llama-3.2-3B-Instruct`       | Handling basic, straightforward questions.  |
-| **Medium Tier**| `meta-llama/Meta-Llama-3-8B-Instruct`    | General-purpose tasks and explanations.     |
-| **Advanced Tier**| `mistralai/Mixtral-8x7B-Instruct-v0.1`   | Complex analysis, coding, and reasoning.    |
+| Role          | Model Name                          | Purpose                               |
+| :------------ | :---------------------------------- | :------------------------------------ |
+| **Router** | `meta-llama/Meta-Llama-3-8B-Instruct` | Fast and efficient query classification. |
+| **Simple Tier** | `meta-llama/Meta-Llama-3-8B-Instruct` | Handling basic, straightforward questions. |
+| **Medium Tier** | `meta-llama/Meta-Llama-3-8B-Instruct` | General-purpose tasks and explanations. |
+| **Advanced Tier** | `mistralai/Mixtral-8x7B-Instruct-v0.1` | Complex analysis, coding, and reasoning. |
 
 
+---
+
+## 📂 Project Structure
+```
+/
+├── .streamlit/
+│   └── config.toml   # Theming configuration (dark/light mode)
+├── app.py            # The main Streamlit application UI
+├── router_logic.py   # Core classification and routing logic
+├── requirements.txt  # Project dependencies
+└── .env              # Environment variables (API keys)
+```
 
 ---
 
