@@ -66,18 +66,6 @@ Create a file named `.env` in the root directory and add your Hugging Face API t
 HF_API_KEY="your_hugging_face_api_key_here"
 ```
 
-### 5. (Optional) Configure the Theme
-For the custom dark theme, create a folder named `.streamlit` and inside it, a file named `config.toml`.
-```toml
-# .streamlit/config.toml
-[theme]
-base="dark"
-primaryColor="#6c5ce7"
-backgroundColor="#0e1117"
-secondaryBackgroundColor="#262730"
-textColor="#fafafa"
-font="sans serif"
-```
 
 ---
 
