@@ -12,7 +12,38 @@
 This project is an **interactive web application** that intelligently classifies user queries and routes them to the most appropriate Large Language Model (LLM). Built with Streamlit and LangChain, it provides an efficient, scalable, and user-friendly interface to a powerful multi-model backend that optimizes for both cost and performance.
 
 ---
+## Project Structure
+```mermaid
+graph TD
+    %% --- Diagram Title ---
+    subgraph Routing Plan
+        direction LR
+        A0("Step-by-Step, Fallback & Caching Strategies")
+    end
 
+    %% --- Main Flow ---
+    A([Start]) --> B[Receive User's Query];
+    B --> C{Check if query in cache?};
+
+    C -- Yes --> D[Return cached answer];
+    D --> Stop1([STOP]);
+
+    C -- No --> F[Analyze and Classify Query];
+    F --> G[Route query to corresponding model];
+    G --> H{Did the model succeed?};
+
+    H -- Yes --> I[Cache the new query and answer];
+    I --> J[Return final answer to user];
+    J --> Stop2([STOP]);
+
+    H -- No --> L{Is current model Advanced?};
+
+    L -- Yes --> M[Return error message to user];
+    M --> Stop3([STOP]);
+
+    L -- No --> O[Escalate to next higher-level model];
+    O --> H;
+```
 
 ## 🚀 Core Features
 
